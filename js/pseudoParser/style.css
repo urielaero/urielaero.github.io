@@ -39,12 +39,12 @@ body,html{
 }
 
 .button{
-    background-color:#339DD1;
-    color:white;
+    color:black;
     padding:4px;
     box-shadow:2px 2px 2px 2px black;
     cursor:pointer;
     text-shadow:rgba(255, 255, 255, .5) 0 1px 0;
+    background:rgb(176,207,224);
 }
 
 .button:hover{
@@ -86,9 +86,10 @@ body,html{
 }
 
 .linea:hover,.linea{
-	background:none;
-	box-shadow:2px 2px 2px 2px black;
+    background:none;
+    box-shadow:2px 2px 2px 2px black;
     cursor:auto;
+    color:white;
 }
 
 .examples{
