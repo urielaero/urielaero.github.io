@@ -1,6 +1,5 @@
-var textarea =["stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T",
-"stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T",
-"stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y"]
+var textarea =[
+"stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y", "stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T"]
 
 //UI del editor
 var editor = {};
@@ -82,12 +81,19 @@ var editor = {};
         if(!e)
             ejemplo = textarea[2];
         else{
-            console.log();
-            ejemplo = textarea[this.className.split(' ')[2]-1]
-            
-        }    
-        edit.innerText = ejemplo;
-        keydown({keyCode:8});
+            ejemplo = textarea[this.className.split(' ')[2]-1] 
+        }
+        if(ejemplo){
+            edit.innerText = ejemplo;
+            keydown({keyCode:8});
+        }else{
+            edit.innerText = "";
+            parser.clear();
+            reloadRegistros();
+            keydown({keyCode:8});
+        }
+
+	
     };
 
 }).apply(editor);
@@ -125,17 +131,11 @@ var parser = {};
 
         }
 
-    }
-    , clear = function(){
-        tokens = [];
-        for(var i in reg.val){
-            reg.val[i] = '';
-        }
-    }
+    } 
 
     , validate = function(txt,limpiar){
         if(limpiar==undefined)
-            clear();
+            self.clear();
         tokenizar(txt);
         var tk;
         for(var i=0;i<tokens.length;i++){     
@@ -159,7 +159,7 @@ var parser = {};
 
     }
 
-    ajustar = function(){
+    , ajustar = function(){
         for(var i=0;i<tokens.length;i++){
             var fuentes = tokens[i].fuentes;
             if(fuentes.length==1){//guardaras en acumulador
@@ -168,6 +168,13 @@ var parser = {};
             }
         }
     };
+
+    self.clear = function(){
+        tokens = [];
+        for(var i in reg.val){
+            reg.val[i] = '';
+        }
+    }
     
     self.run = function(txt,clear){
         if(validate(txt,clear)){
