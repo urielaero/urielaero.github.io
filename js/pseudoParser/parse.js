@@ -1,5 +1,6 @@
 var textarea =[
-"stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y", "stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T"]
+"stor 5 \n load A \n stor 3 \n load B \n stor 1 \n load C \n stor 5 \n load D\n stor 1 \n load E \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y",
+"stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T"]
 
 //UI del editor
 var editor = {};
@@ -200,7 +201,10 @@ var alu = {};
         },
 
         001:function stor(){
-            reg.val[f1] = f2;
+	        if(isFinite(f1))
+                reg.val.AC = f2;
+            else
+                reg.val[f1] = f2;
         },
 
         010:function load(){//siempre binario
@@ -292,5 +296,6 @@ Element.prototype.on = function(event,callback){
         return this.attachEvent('on'+event,callback);
     else
         return this.addEventListener(event,callback,false)
-}
+};
+
 window.addEventListener('load', editor.ready, false )
