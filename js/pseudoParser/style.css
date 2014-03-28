@@ -102,3 +102,18 @@ body,html{
     display:block;
     margin:5px 0 6px 8px;
 }
+
+.open{
+    position:relative;
+}
+
+.openReal{
+    opacity:0;
+    position:absolute;
+    top:0;
+    left:0;
+    padding:0;
+    border:0;
+    margin:0;
+    width:100%;
+}

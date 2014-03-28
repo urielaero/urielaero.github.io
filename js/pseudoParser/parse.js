@@ -1,6 +1,6 @@
 var textarea =[
-"stor 5 \n load A \n stor 3 \n load B \n stor 1 \n load C \n stor 5 \n load D\n stor 1 \n load E \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y",
-"stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T"]
+"#una sola fuente: \nstor 5 \n load A \n stor 3 \n load B \n stor 1 \n load C \n stor 5 \n load D\n stor 1 \n load E \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y",
+"#dos fuentes: \n stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","#tres fuentes:\n add A,0,5 \n add B,0,3 \n add C,0,1 \n add D,0,5 \n add E,0,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T"];
 
 //UI del editor
 var editor = {};
@@ -10,6 +10,7 @@ var editor = {};
     , number
     , counterLinea = 1
     , errorE
+    , nameFile = "asm.asm"
     , keydown = function(e){
         if(e.keyCode == 13 || e.keyCode==8){
             var width = edit.clientHeight/18;
@@ -60,10 +61,30 @@ var editor = {};
         });
        
         var ejemplos = document.querySelectorAll('.button.ejemplo');
-        for(var i=0;i<ejemplos.length;i++){
+        for(var i=0;i<4;i++){
             ejemplos[i].on('click',loadEjemplo); 
         }
         
+        document.querySelector('.save').on('click',function(e){
+            var a = document.createElement('a');
+            a.href = "data:text/plain;charset=utf-8," + encodeURIComponent(edit.innerText);
+            a.download = nameFile;
+            a.click();
+        });
+
+        document.querySelector('.open').on('change',function(e){
+            var f = e.target.files[0];
+            console.log(f);
+            nameFile = f.name;
+            var reader = new FileReader();
+            reader.readAsText(f)
+            reader.onload = function(e){
+                edit.innerText = e.target.result;
+                keydown({keyCode:8});
+
+            }
+        });
+
         loadEjemplo();
     
         reloadRegistros();
@@ -114,11 +135,11 @@ var parser = {};
             var linea = eliminaEspacios(lineas[i])
             , op_fuente = linea.split(' ');
             counterLinea++;
-            if(linea != ""){//linea sin nada
+            if(linea != "" && linea[0]!="#"){//linea sin nada o comentario
                 if(op_fuente.length>1){
                     var op = op_fuente[0]
                     , fuentes = op_fuente.slice(1).join('').split(',');//espacios entre comas
-                    //console.log('op:',op,'fuentes:',fuentes);
+
                     tokens.push({
                             op:op,
                             fuentes:fuentes,
@@ -298,4 +319,4 @@ Element.prototype.on = function(event,callback){
         return this.addEventListener(event,callback,false)
 };
 
-window.addEventListener('load', editor.ready, false )
+window.addEventListener('load',editor.ready,false )
