@@ -1,6 +1,6 @@
 var textarea =[
 "#una sola fuente: \nstor 5 \n load A \n stor 3 \n load B \n stor 1 \n load C \n stor 5 \n load D\n stor 1 \n load E \n stor E \n mpy D \n ADD C \n load Y \n stor A \n sub B \n div Y \n load Y",
-"#dos fuentes: \n stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","#tres fuentes:\n add A,0,5 \n add B,0,3 \n add C,0,1 \n add D,0,5 \n add E,0,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T"];
+"#dos fuentes: \n stor A,5 \n stor B,3 \n stor C,1 \n stor D,5 \n stor E,1 \n move Y,A \n sub Y,B \n move T,E \n mpy T,D \n ADD T,C \n DIV Y,T","#tres fuentes:\n add A,0,5 \n add B,0,3 \n add C,0,1 \n add D,0,5 \n add E,0,1 \n SUB Y,A,B \n MPY T,D,E \n ADD T,T,C \n DIV Y,Y,T","A+B*C+(D+E)*F"];
 
 //UI del editor
 var editor = {};
@@ -61,7 +61,7 @@ var editor = {};
         });
        
         var ejemplos = document.querySelectorAll('.button.ejemplo');
-        for(var i=0;i<4;i++){
+        for(var i=0;i<5;i++){
             ejemplos[i].on('click',loadEjemplo); 
         }
         
@@ -85,6 +85,10 @@ var editor = {};
             }
         });
 
+        document.querySelector('.postfijo').on('click',function(e){
+            edit.innerText = postfijo(edit.innerText);
+        });
+
         loadEjemplo();
     
         reloadRegistros();
@@ -101,7 +105,7 @@ var editor = {};
     , loadEjemplo = function(e){
         var ejemplo;
         if(!e)
-            ejemplo = textarea[2];
+            ejemplo = textarea[3];
         else{
             ejemplo = textarea[this.className.split(' ')[2]-1] 
         }
@@ -320,3 +324,49 @@ Element.prototype.on = function(event,callback){
 };
 
 window.addEventListener('load',editor.ready,false )
+
+function postfijo(entrada){
+    var pila = []
+    , salida = ''
+    , op = {
+        '+':0
+        , '-':0
+        , '*':1
+        , '/':1
+        }
+    , i
+    , length;
+
+    for(var j=0;j<entrada.length;j++){
+        i = entrada[j];
+        if(!(i in op) && i != '(' && i !=')'){
+            salida += i;
+        }else if(i=='('){
+            pila.push(i);
+        }else if(i in op){
+            while(1){
+                if(pila.indexOf('(') !=-1){
+                    pila.push(i);
+                    break;            
+                }else if(pila.length == 0 || op[i] > op[pila[0]]){
+                    pila.push(i);
+                    break;
+                }else{
+                    salida += pila.pop();
+                }
+                
+            }
+        }else if(i == ')'){
+            for(var l=0;l<pila.length;l++){
+                if(pila[l] != '(')
+                    salida += pila.pop();
+            }
+            pila.pop();
+        }
+    }
+    length = pila.length;
+    for(i=0;i<length;i++){
+        salida += pila.pop();
+    }
+    return salida;
+}
