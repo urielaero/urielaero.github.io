@@ -105,7 +105,7 @@ var editor = {};
     , loadEjemplo = function(e){
         var ejemplo;
         if(!e)
-            ejemplo = textarea[3];
+            ejemplo = textarea[0];
         else{
             ejemplo = textarea[this.className.split(' ')[2]-1] 
         }
