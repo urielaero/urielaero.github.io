@@ -140,16 +140,19 @@ var parser = {};
             , op_fuente = linea.split(' ');
             counterLinea++;
             if(linea != "" && linea[0]!="#"){//linea sin nada o comentario
-                if(op_fuente.length>1){
+                if(op_fuente.length>1 || op_fuente[0].toUpperCase()=='HLT'){
                     var op = op_fuente[0]
                     , fuentes = op_fuente.slice(1).join('').split(',');//espacios entre comas
 
+                    if(op.toUpperCase() == 'HLT')
+                        fuentes = [1];
                     tokens.push({
                             op:op,
                             fuentes:fuentes,
                             linea:counterLinea
                         });
                 }else{
+                    console.log(op_fuente);
                     editor.error(counterLinea,'up');
                 }        
             }
@@ -163,7 +166,8 @@ var parser = {};
         if(limpiar==undefined)
             self.clear();
         tokenizar(txt);
-        var tk;
+        var tk,
+        onlyRegister = [00111,01000,01001,01011,01111]
         for(var i=0;i<tokens.length;i++){     
             tk = tokens[i]; 
             if(tk['op'] && isa.getOpCode(tk.op)==-1){
@@ -176,6 +180,10 @@ var parser = {};
                     if(!(tk.fuentes[j] in reg.val) && !(tk.fuentes[j]!='' && isFinite(tk.fuentes[j])) ){
                         editor.error(tk.linea,'fuente no valido');
                         return false;
+                    }
+                    if(onlyRegister.indexOf(isa.getOpCode(tk.op))!=-1 && isFinite(tk.fuentes[0])){
+                        editor.error(tk.linea,'se necesita un registro');
+                        return false;                        
                     }
                 }
             }
@@ -208,7 +216,8 @@ var parser = {};
             for(var i=0;i<tokens.length;i++){
                 var tk = tokens[i];
                 alu.setData(tk)
-                alu.execute();
+                if(alu.execute() === false)
+                    break;
 
             }
         }
@@ -221,42 +230,82 @@ var alu = {};
     var self = this
     , codigoOperacion
     , opCode = {
-        000:function move(){//siempre solo binario
+        00000:function move(){//siempre solo binario
             reg.val[f1] = f2; 
         },
 
-        001:function stor(){
+        00001:function stor(){
 	        if(isFinite(f1))
                 reg.val.AC = f2;
             else
                 reg.val[f1] = f2;
         },
 
-        010:function load(){//siempre binario
+        00010:function load(){//siempre binario
             //reg.val[f1] = f2;
             reg.val[fs[1]] = reg.val['AC'];
         },
 
-        011:function sub(){
+        00011:function sub(){
             f2 = f2?f2:reg.val['AC'];
             f2 = f3?f2:(+f2*-1);
             reg.val[f1] = +(-f3 || reg.val[f1]) + +f2;
         
         },
 
-        100:function add(){
+        00100:function add(){
             reg.val[f1] = +(f3 || reg.val[f1]) + +f2;
         },
         
-        101:function mpy(){
+        00101:function mpy(){
             reg.val[f1] = +(f3 || reg.val[f1]) * +f2;
         },
 
-        110:function div(){
+        00110:function div(){
             var aux = f2;
             f2 = f3?f2:reg.val[f1];
             f3 = f3?f3:aux;
             reg.val[f1] = f2 / f3;
+        },
+	//nuevas
+        00111:function inr(){
+            reg.val[fs[1]]++;
+        },
+        
+        01000:function dcr(){
+            reg.val[fs[1]]--; 
+        },
+        
+        01001:function ana(){
+            reg.val[fs[1]] = (reg.val[f1] && f2)?1:0;
+        },
+
+        01010:function ani(){
+            reg.val[fs[0]] = (parseInt(reg.val[fs[0]]) && parseInt(fs[1]))?1:0; 
+        },
+
+        01011:function ora(){
+            reg.val[f1] = (reg.val[f1] || f2)?1:0;
+        },
+
+        01100:function ori(){
+            reg.val[f1] = (parseInt(reg.val[f1]) || parseInt(f2))?1:0;
+        },
+        
+        01101:function hlt(){
+            return false;
+        },
+
+        01110:function sui(){
+            reg.val[f1] = reg.val[f1]-f2;
+        },
+
+        01111:function xra(){
+            reg.val[f1] = (reg.val[f1] != f2)?1:0; 
+        },
+
+        10000:function xri(){
+            reg.val[f1] = (reg.val[f1] != f2)?1:0; 
         }
 
     }
@@ -275,7 +324,7 @@ var alu = {};
     }
 
     self.execute = function(){
-        opCode[codigoOperacion]();
+        return opCode[codigoOperacion]();
         
     }
     
@@ -286,13 +335,24 @@ var isa = {};
 (function(){
     var self = this;
     opCodes = {
-        MOVE:000,
-        STOR:001,
-        LOAD:010,
-        SUB:011,
-        ADD:100,
-        MPY:101,
-        DIV:110
+        MOVE:00000,
+        STOR:00001,
+        LOAD:00010,
+        SUB:00011,
+        ADD:00100,
+        MPY:00101,
+        DIV:00110,
+        //10 mas...
+        INR:00111,//inr D incrementa en uno D
+        DCR:01000, //DCR D decrementa en uno D
+        ANA:01001, //ANA S , AC AND S , guarda en AC, registros.
+        ANI:01010, //ANA sin registro.
+        ORA:01011,//ORA S , AC OR S guarda en AC
+        ORI:01100,//ora sin registro
+        HLT:01101,
+        SUI:01110, //substrae lo del numero de AC
+        XRA:01111, //xor s , s xor AC
+        XRI:10000 //xor sin registro.
     };
     
     self.getOpCode = function(name){
