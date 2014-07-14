@@ -5,8 +5,8 @@ var dataset = [
 , svg = {};
 (function(){
     var self = this
-    , width = 500
-    , height = 100;
+    , width = 800
+    , height = 300;
 
     self.canvas = d3.select(".chart");
     self.canvas.attr({
@@ -33,7 +33,7 @@ var yScale = d3.scale
               .domain([0, d3.max(dataset,function(d){
                     return d[1];
               })])
-              .range([svg.height(),0]);
+              .range([0,svg.height()]);
 
 svg.canvas
     .selectAll("circle")
@@ -48,7 +48,7 @@ svg.canvas
             return yScale(d[1]);
        }
        ,r:function(d){
-            return Math.sqrt( 500 - d[1]);
+            return Math.sqrt( 300 - d[1]);
        }
        ,fill:'black'
     });
@@ -66,7 +66,7 @@ svg.canvas
             return xScale(d[0]);
         }
         ,y:function(d){
-            return xScale(d[1]);
+            return yScale(d[1]);
         }
         ,fill:'blue'
     });
