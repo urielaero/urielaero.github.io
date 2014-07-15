@@ -77,26 +77,32 @@ var leds = {};
                     ,'image-rendering':'optimizeQuality'
                     ,transform:'scale(.5)'
                   });
+    group.append("image")
+         .attr({
+                "xlink:href":"doge.png"
+                ,width:"100%"
+                ,height:"100%"
+                ,y:'550'
+                ,transform:"scale(.5)"
+            });
+
     var ellipse = group.append('ellipse').attr({
         cx:180
         ,cy:230
         ,rx:100
         ,ry:40
-        ,fill:'white'
-        ,filter:'url(#blur)'
-        ,'class':'on'
+        ,fill:'transparent'
     })
 
     , path = group.append('path')
          .attr({
             d:svg.interpolateLine([
-                {x:0,y:400}
+                {x:0,y:svg.height()}
                 ,{x:90,y:230}
                 ,{x:270,y:230}
-                ,{x:360,y:400}
+                ,{x:360,y:svg.height()}
             ])
-            ,fill:'white'
-            ,filter:'url(#blur)'
+	    ,fill:'transparent'
          });
 
     svg.canvas.on('click',function(){
@@ -104,7 +110,7 @@ var leds = {};
         var on = ellipse.classed('on')
         , attr = {
             filter:on?'none':'url(#blur)'
-            ,fill:on?'transparent':'white'
+            ,fill:on?'transparent':'rgba(255,255,255,.5)'
             ,'class':on?'':'on'
         };
         path.attr(attr);
