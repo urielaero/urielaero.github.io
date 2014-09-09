@@ -2,7 +2,7 @@ var svg = {};
 (function(){
     var self = this
     , width = 700
-    , height = 600;
+    , height = 610;
 
     self.canvas = d3.select(".chart");
     self.canvas.attr({
@@ -28,7 +28,7 @@ circle
         
         y:-10
         ,x:function(d,i){
-            return i*33;
+            return i*50;
         }
         ,"class":"left"
         ,fill:'white'
@@ -102,13 +102,13 @@ function isWin(){
         if(!verbs[i].finaly)
             return 0;
     }
-                  svg.canvas.append("image")
-                  .transition()
-                  .delay(300)
-                  .attr({
-                    "xlink:href":"win.jpg"
-                    ,width:"100%"
-                    ,height:"100%"
-                  });
+    svg.canvas.append("image")
+    .transition()
+    .delay(300)
+    .attr({
+      "xlink:href":"win.jpg"
+      ,width:"100%"
+      ,height:"100%"
+    });
 }
 

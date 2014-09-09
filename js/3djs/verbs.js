@@ -1,4 +1,4 @@
-verbs = [
+var verbs = [
     {
         text:"believe"
         ,isStative:1
