@@ -106,14 +106,13 @@ var example1 = {};
               .duration(1000)
               .style('opacity',1);
     d3.select("body")
-              .on('mousedown',mousedown);
+              .on('click',mousedown);
     
     function tick(e){
         var k = 6*e.alpha;
         nodes.forEach(function(d,i){
             d.y += i & 1 ? k:-k;
             d.x += i & 2 ? k:-k;
-            console.log({x:d.x,y:d.y})
         });
         node.attr({
             cx:function(d){

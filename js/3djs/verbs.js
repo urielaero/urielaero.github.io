@@ -1,0 +1,54 @@
+verbs = [
+    {
+        text:"believe"
+        ,isStative:1
+    }
+    ,{
+        text:"doubt"
+        ,isStative:1
+    }
+    ,{
+        text:"guess"
+        ,isStative:1
+
+    }
+    ,{
+        text:"imagine"
+        ,isStative:1
+    }
+    ,{
+        text:"mean"
+        ,isStative:1
+    }
+    ,{
+        text:"remember"
+        ,isStative:1
+    }
+    ,{
+        text:"think"
+        ,isStative:1
+        ,isDynamic:1
+    }
+    ,{
+        text:"abandon"
+        ,isDynamic:1
+    }
+    ,{
+        text:"ask"
+        ,isStative:1
+        ,isDynamic:1
+    }
+    ,{
+        text:"beg"
+        ,isDynamic:1
+    }
+    ,{
+        text:"call"
+        ,isDynamic:1
+    }
+    ,{
+        text:"drink"
+        ,isDynamic:1
+    }
+    
+]

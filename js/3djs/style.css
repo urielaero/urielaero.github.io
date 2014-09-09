@@ -1,3 +1,6 @@
+body{
+    background-color:black
+}
 .axis path
 ,.axis line{
     fill:none;
@@ -14,12 +17,20 @@
     stroke-width:2;
     fill:none;
 }
-.chart,.buttons{
+.chart,.buttons,.counter{
     display:inline-block;
     vertical-align:top;
 }
 .buttons p{
-    border: 2px solid blue;
+    border: 2px solid black;
     padding:5px;
     cursor:pointer;
+    color:white;
+}
+.counter{
+    color:red;
+    font-size:30px;
+}
+p{
+    font-size:25px;
 }
