@@ -34,3 +34,19 @@ body{
 p{
     font-size:25px;
 }
+
+.msg{
+	width:700px;
+	height:800px;
+	position:absolute;
+	z-index:100;
+	background-color:black;
+	opacity:.8;
+	color: white;
+	text-align: center;
+	top:0;
+}
+
+.msg p{
+	font-size:40px;
+}

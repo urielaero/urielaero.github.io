@@ -20,7 +20,7 @@ var svg = {};
 var circle = svg.canvas
   .selectAll("text")
   .data(verbs)
-  .enter()
+  .enter();
 
 circle
   .append("text")
@@ -40,7 +40,9 @@ circle
   .on('click',function(i){
         var self = $(this);
         var select = $('.buttons p.select');
-        if(!select.size()) return 0;
+        if(!select.size()){
+            return 0;
+        }
         if(select.hasClass('dynamic')){
             if(i.isDynamic){
                 i.finaly = 1;
@@ -91,7 +93,7 @@ circleLeft
 
 
 d3.selectAll('.buttons p').on('click',function(e){
-    console.log("asd")
+    $('.msg').css('display','none');
     $('p').css('border','2px solid black').removeClass('select')
     var self = $(this)
     self.css("border",'2px solid red').addClass('select')
