@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>{{ page.title }}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+        <link rel="stylesheet" href="{{site.url}}/assets/css/main.css" />
+        <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+    </head>
+    <body>
+        <!-- Content -->
+            <div id="content">
+                <div class="inner">
+                    <article class="box post post-excerpt">
+                        <header>
+                            <h2><a href="{{ page.url }}">{{ page.title }}</a></h2>
+                        </header>
+                        <div class="info">
+                            <span class="date">
+                                {{ page.date | date: "<span class='month'>%B</span><span class='day'>%e</span><span class='year'>, %Y</span>" }}
+                            </span>
+                        </div>
+                    </article>
+                    <p>{{content}}</p>
+                </div>
+            </div>
+            {% include sidebar.html %}
+
+        <!-- Scripts -->
+            <script src="{{site.url}}/assets/js/jquery.min.js"></script>
+            <script src="{{site.url}}/assets/js/skel.min.js"></script>
+            <script src="{{site.url}}/assets/js/util.js"></script>
+            <!--[if lte IE 8]><script src="{{site.url}}/assets/js/ie/respond.min.js"></script><![endif]-->
+            <script src="{{site.url}}/assets/js/main.js"></script>
+    </body>
+</html>
